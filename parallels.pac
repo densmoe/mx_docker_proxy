@@ -19,6 +19,6 @@ var FindProxyForURL = function(init, profiles) {
     "+proxy": function(url, host, scheme) {
         "use strict";
         if (host === "[::1]" || host === "localhost" || host === "127.0.0.1") return "DIRECT";
-        return "PROXY 10.211.55.2:3128";
+        return "PROXY 10.211.55.2:1080";
     }
 });
