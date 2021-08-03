@@ -1,24 +1,11 @@
-var FindProxyForURL = function(init, profiles) {
-    return function(url, host) {
-        "use strict";
-        var result = init, scheme = url.substr(0, url.indexOf(":"));
-        do {
-            result = profiles[result];
-            if (typeof result === "function") result = result(url, host, scheme);
-        } while (typeof result !== "string" || result.charCodeAt(0) === 43);
-        return result;
-    };
-}("+auto switch", {
-    "+auto switch": function(url, host, scheme) {
-        "use strict";
-        if (/(?:^|\.)mendix\.test$/.test(host)) return "+proxy";
-        if (/(?:^|\.)mendixcloud\.test$/.test(host)) return "+proxy";
-        if (/(?:^|\.)home\.mendix\.test$/.test(host)) return "+proxy";
-        return "DIRECT";
-    },
-    "+proxy": function(url, host, scheme) {
-        "use strict";
-        if (host === "[::1]" || host === "localhost" || host === "127.0.0.1") return "DIRECT";
-        return "PROXY 10.211.55.2:1080";
-    }
-});
+// pac for socks5 proxy
+// needs to be hosted online to work with Chrome
+
+function FindProxyForURL(url, host) {
+    // *.mendix.test and *.mendixcloud.test go through Socks5 proxy
+    if (shExpMatch(host, "*.mendix.test") || shExpMatch(host, "*.mendixcloud.test"))
+        return "SOCKS5 localhost:1080";
+
+    // all other requests go directly to the WWW:
+    return "DIRECT";
+}
